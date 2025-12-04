@@ -178,69 +178,7 @@ plt.show()
 print("✓ Saved: viz_1_predicted_vs_actual_clear_circles.png")
 
 # ============================================================================
-# FIGURE 2: CONFUSION MATRIX (TRUE/FALSE POSITIVES/NEGATIVES)
-# ============================================================================
-print("\n2. Generating Confusion Matrix (Classification-style Binning)...")
-
-fig, axes = plt.subplots(1, 3, figsize=(18, 5))
-fig.suptitle('ANN Model: Confusion Matrix - Prediction Accuracy Classification', 
-             fontsize=16, fontweight='bold', y=1.02)
-
-for idx, output in enumerate(outputs):
-    ax = axes[idx]
-    
-    y_actual = ann_results_key[output]['y_test']
-    y_pred = ann_results_key[output]['y_pred_test']
-    mae = ann_results_key[output]['mae_test']
-    
-    # Threshold: Use MAE as boundary
-    # Classify predictions as "Correct" if error < MAE, "Incorrect" if error >= MAE
-    errors = np.abs(y_actual - y_pred)
-    
-    # Threshold: Use median of actual values to classify as "High" or "Low"
-    median_actual = np.median(y_actual)
-    
-    # Create 2x2 confusion matrix
-    # Rows: Actual High/Low
-    # Cols: Predicted Correct/Incorrect
-    
-    actual_high = y_actual >= median_actual
-    actual_low = y_actual < median_actual
-    pred_correct = errors < mae
-    pred_incorrect = errors >= mae
-    
-    # True Positive: Actual High & Predicted Correct
-    TP = np.sum(actual_high & pred_correct)
-    # True Negative: Actual Low & Predicted Correct
-    TN = np.sum(actual_low & pred_correct)
-    # False Positive: Actual Low & Predicted Incorrect
-    FP = np.sum(actual_low & pred_incorrect)
-    # False Negative: Actual High & Predicted Incorrect
-    FN = np.sum(actual_high & pred_incorrect)
-    
-    # Create confusion matrix
-    cm = np.array([[TP, FN],
-                   [FP, TN]])
-    
-    # Plot heatmap
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False, ax=ax,
-                xticklabels=['Correct Pred', 'Incorrect Pred'],
-                yticklabels=['Actual High', 'Actual Low'],
-                annot_kws={'size': 14, 'weight': 'bold'},
-                linewidths=2, linecolor='black')
-    
-    ax.set_title(f'{output}\nMAE={mae:.4f}, Accuracy={(TP+TN)/(TP+TN+FP+FN)*100:.1f}%', 
-                 fontweight='bold', fontsize=13, pad=10)
-    ax.set_ylabel('Actual', fontweight='bold', fontsize=11)
-    ax.set_xlabel('Predicted', fontweight='bold', fontsize=11)
-
-plt.tight_layout()
-plt.savefig(os.path.join(save_directory, 'viz_2_confusion_matrix_classification.png'), dpi=300, bbox_inches='tight')
-plt.show()
-print("✓ Saved: viz_2_confusion_matrix_classification.png")
-
-# ============================================================================
-# FIGURE 3: MAE COMPARISON
+# FIGURE 2: MAE COMPARISON
 # ============================================================================
 print("\n3. Generating MAE Comparison...")
 
@@ -277,7 +215,7 @@ plt.show()
 print("✓ Saved: viz_3_mae_comparison.png")
 
 # ============================================================================
-# FIGURE 4: R² SCORE COMPARISON
+# FIGURE 3: R² SCORE COMPARISON
 # ============================================================================
 print("\n4. Generating R² Score Comparison...")
 
@@ -312,7 +250,7 @@ plt.show()
 print("✓ Saved: viz_4_r2_comparison.png")
 
 # ============================================================================
-# FIGURE 5: RESIDUALS DISTRIBUTION
+# FIGURE 4: RESIDUALS DISTRIBUTION
 # ============================================================================
 print("\n5. Generating Residuals Distribution...")
 
@@ -345,7 +283,7 @@ plt.show()
 print("✓ Saved: viz_5_residuals_distribution.png")
 
 # ============================================================================
-# FIGURE 6: PERFORMANCE METRICS HEATMAP
+# FIGURE 5: PERFORMANCE METRICS HEATMAP
 # ============================================================================
 print("\n6. Generating Performance Metrics Heatmap...")
 
