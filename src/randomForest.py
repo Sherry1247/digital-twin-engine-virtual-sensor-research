@@ -19,6 +19,7 @@ def regression_metrics(y_true, y_pred):
     r2   = [r2_score(y_true[:, i], y_pred[:, i]) for i in range(y_true.shape[1])]
     return mae, rmse, np.array(r2)
 
+
 def plot_pred_vs_actual_clear_circles(
     y_test_dict, outputs, model_name, save_directory, file_name_suffix
 ):
@@ -79,51 +80,70 @@ def plot_pred_vs_actual_clear_circles(
     plt.show()
     print(f"✓ Saved: {fname}")
 
-def plot_mae_comparison(
-    mae_train, mae_test, outputs, model_name, save_directory, file_name_suffix
-):
-    print("\n2. Generating MAE Comparison...")
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+def plot_mae_comparison_percent(
+    mae_train_abs, mae_test_abs, y_test, outputs,
+    model_name, save_directory, file_name_suffix
+):
+    """
+    Plot MAE as percentage of mean |actual| on the test set.
+    """
+    print("\n2. Generating Normalized MAE Comparison (Percent of |mean actual|)...")
+
+    fig, ax = plt.subplots(figsize=(9, 5))
 
     x_pos = np.arange(len(outputs))
-    width = 0.35
+    width = 0.28
+
+    # Mean absolute actual value per output (test data only)
+    mean_abs_test = np.array([
+        np.mean(np.abs(y_test[:, i])) for i in range(len(outputs))
+    ])
+    mean_abs_test = np.where(mean_abs_test == 0, 1e-8, mean_abs_test)
+
+    # Convert absolute MAE to percentage
+    mae_train_pct = 100.0 * mae_train_abs / mean_abs_test
+    mae_test_pct  = 100.0 * mae_test_abs  / mean_abs_test
 
     bars1 = ax.bar(
-        x_pos - width/2, mae_train, width,
-        label='Training MAE', alpha=0.8,
+        x_pos - width/2, mae_train_pct, width,
+        label='Training MAE (%)', alpha=0.8,
         edgecolor='black', color='#3498db'
     )
     bars2 = ax.bar(
-        x_pos + width/2, mae_test, width,
-        label='Test MAE', alpha=0.8,
+        x_pos + width/2, mae_test_pct, width,
+        label='Test MAE (%)', alpha=0.8,
         edgecolor='black', color='#e74c3c'
     )
 
-    ax.set_xlabel('Output Variable', fontweight='bold', fontsize=13)
-    ax.set_ylabel('Mean Absolute Error (MAE)', fontweight='bold', fontsize=13)
-    ax.set_title(f'{model_name}: MAE Comparison (Training vs Test)',
-                 fontweight='bold', fontsize=15)
+    ax.set_xlabel('Output Variable', fontweight='bold', fontsize=12)
+    ax.set_ylabel('MAE (% of mean |actual|)', fontweight='bold', fontsize=12)
+    ax.set_title(f'{model_name}: Normalized MAE Comparison',
+                 fontweight='bold', fontsize=14)
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(outputs, fontsize=12)
-    ax.legend(fontsize=11, loc='upper left')
+    ax.set_xticklabels(outputs, fontsize=11)
+
+    ax.legend(fontsize=10, loc='center left', bbox_to_anchor=(1.02, 0.5))
     ax.grid(True, alpha=0.3, axis='y')
 
+    # value labels
     for bars in [bars1, bars2]:
         for bar in bars:
-            height = bar.get_height()
+            h = bar.get_height()
             ax.text(
-                bar.get_x() + bar.get_width()/2., height,
-                f'{height:.4f}',
+                bar.get_x() + bar.get_width()/2.0,
+                h + 0.3,
+                f'{h:.2f}%',
                 ha='center', va='bottom',
-                fontsize=10, fontweight='bold'
+                fontsize=8.5, fontweight='bold'
             )
 
     plt.tight_layout()
-    fname = f'viz_mae_comparison_{file_name_suffix}.png'
+    fname = f'viz_mae_comparison_pct_{file_name_suffix}.png'
     plt.savefig(os.path.join(save_directory, fname), dpi=300, bbox_inches='tight')
     plt.show()
     print(f"✓ Saved: {fname}")
+
 
 # --------------------------------------------------
 # MAIN
@@ -162,6 +182,7 @@ if __name__ == "__main__":
     for i, t in enumerate(target_cols):
         print(f"{t}: MAE={mae_test[i]:.4f}, RMSE={rmse_test[i]:.4f}, R²={r2_test[i]:.4f}")
 
+    # dict for scatter plots
     y_test_dict = {}
     for i, out in enumerate(target_cols):
         y_test_dict[out] = {
@@ -178,9 +199,12 @@ if __name__ == "__main__":
         file_name_suffix='rf'
     )
 
-    plot_mae_comparison(
-        mae_train, mae_test,
-        target_cols,
+    # MAE percentage plot
+    plot_mae_comparison_percent(
+        mae_train_abs=mae_train,
+        mae_test_abs=mae_test,
+        y_test=y_test,
+        outputs=target_cols,
         model_name='Random Forest Model',
         save_directory=save_directory,
         file_name_suffix='rf'

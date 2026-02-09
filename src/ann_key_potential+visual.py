@@ -218,69 +218,74 @@ plt.close()
 # ============================================================================
 # VIZ 2: CONFUSION MATRIX - PREDICTION ACCURACY CLASSIFICATION
 # ============================================================================
-print("[2/6] Generating Confusion Matrix (Binary Classification)...")
+# ============================================================================
+# VIZ 3: NORMALIZED MAE COMPARISON (PERCENT OF MEAN ABSOLUTE VALUE)
+# ============================================================================
+# ============================================================================
+# VIZ 3: NORMALIZED MAE COMPARISON (PERCENT OF MEAN ABSOLUTE VALUE)
+# ============================================================================
+print("\n[3/6] Generating Normalized MAE Comparison (Percent of |mean actual|)...")
 
-fig, axes = plt.subplots(1, 3, figsize=(16, 4))
-fig.suptitle('ANN Model (All Inputs): Confusion Matrix - Prediction Accuracy Classification', 
-             fontsize=16, fontweight='bold', y=1.02)
+fig, ax = plt.subplots(figsize=(9, 5))   # compact figure
 
-for idx, output in enumerate(outputs):
-    ax = axes[idx]
-    
-    y_actual = ann_results_all[output]['y_test']
-    y_pred = ann_results_all[output]['y_pred_test']
-    mae = ann_results_all[output]['mae_test']
-    
-    # Binary classification: split at median
-    median_actual = np.median(y_actual)
-    
-    # Create binary labels: 1 if above median (High), 0 if below (Low)
-    actual_binary = (y_actual > median_actual).astype(int)
-    
-    # For predictions: "correct" if within MAE, "incorrect" otherwise
-    pred_error = np.abs(y_actual - y_pred)
-    pred_correct = (pred_error <= mae).astype(int)
-    
-    # Compute confusion matrix
-    cm = confusion_matrix(actual_binary, pred_correct, labels=[0, 1])
-    
-    # Compute accuracy
-    accuracy = accuracy_score(actual_binary, pred_correct)
-    
-    # Extract TP, TN, FP, FN
-    TN = cm[0, 0]  # Actual Low, Predicted Correct
-    FP = cm[0, 1]  # Actual Low, Predicted Incorrect
-    FN = cm[1, 0]  # Actual High, Predicted Incorrect
-    TP = cm[1, 1]  # Actual High, Predicted Correct
-    
-    # Create confusion matrix for display
-    cm_display = np.array([[TP, FP], [FN, TN]])
-    
-    # Plot heatmap
-    im = ax.imshow(cm_display, cmap='Blues', aspect='auto', vmin=0, vmax=max(cm_display.flatten()))
-    
-    # Add text annotations
-    for i in range(2):
-        for j in range(2):
-            text = ax.text(j, i, str(cm_display[i, j]), ha="center", va="center",
-                          color="white" if cm_display[i, j] > cm_display.max()/2 else "black",
-                          fontsize=16, fontweight='bold')
-    
-    # Set labels
-    ax.set_xticks([0, 1])
-    ax.set_yticks([0, 1])
-    ax.set_xticklabels(['Correct Pred', 'Incorrect Pred'], fontsize=10)
-    ax.set_yticklabels(['Actual High', 'Actual Low'], fontsize=10)
-    ax.set_xlabel('Predicted', fontsize=11, fontweight='bold')
-    ax.set_ylabel('Actual', fontsize=11, fontweight='bold')
-    
-    ax.set_title(f'{output}\nMAE={mae:.4f}, Accuracy={accuracy*100:.1f}%', 
-                 fontsize=12, fontweight='bold')
+x_pos = np.arange(len(outputs))
+width = 0.28                             # narrower bars
+
+# Absolute MAE from all-inputs ANN
+mae_train_abs = np.array([ann_results_all[out]['mae_train'] for out in outputs])
+mae_test_abs  = np.array([ann_results_all[out]['mae_test']  for out in outputs])
+
+# Mean absolute value of actual test data (per output)
+mean_abs_test = np.array([
+    np.mean(np.abs(ann_results_all[out]['y_test'])) for out in outputs
+])
+mean_abs_test = np.where(mean_abs_test == 0, 1e-8, mean_abs_test)
+
+# MAE as percentage of mean absolute actual
+mae_train_pct = 100.0 * mae_train_abs / mean_abs_test
+mae_test_pct  = 100.0 * mae_test_abs  / mean_abs_test
+
+bars1 = ax.bar(
+    x_pos - width/2, mae_train_pct, width,
+    label='Training MAE (%)', alpha=0.8,
+    edgecolor='black', color='#3498db'
+)
+bars2 = ax.bar(
+    x_pos + width/2, mae_test_pct, width,
+    label='Test MAE (%)', alpha=0.8,
+    edgecolor='black', color='#e74c3c'
+)
+
+ax.set_xlabel('Output Variable', fontweight='bold', fontsize=12)
+ax.set_ylabel('MAE (% of mean |actual|)', fontweight='bold', fontsize=12)
+ax.set_title('ANN Model (Key + Potential Inputs): Normalized MAE Comparison',
+             fontweight='bold', fontsize=14)
+ax.set_xticks(x_pos)
+ax.set_xticklabels(outputs, fontsize=11)
+
+ax.legend(fontsize=10, loc='center left', bbox_to_anchor=(1.02, 0.5))
+ax.grid(True, alpha=0.3, axis='y')
+
+# Value labels just above each bar
+for bars in [bars1, bars2]:
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            height + 0.3,                 # small offset above bar
+            f'{height:.2f}%',
+            ha='center', va='bottom',
+            fontsize=8.5, fontweight='bold'
+        )
 
 plt.tight_layout()
-plt.savefig(os.path.join(save_directory, 'viz_all_2_confusion_matrix.jpg'), dpi=300, bbox_inches='tight')
-print("✓ Saved: viz_all_2_confusion_matrix.jpg")
-plt.close()
+plt.savefig(os.path.join(
+    save_directory,
+    'viz_all_inputs_mae_comparison_normalized.png'
+), dpi=300, bbox_inches='tight')
+plt.show()
+print("✓ Saved: viz_all_inputs_mae_comparison_normalized.png")
+
 
 # ============================================================================
 # VIZ 3: MAE COMPARISON (TRAINING vs TEST)

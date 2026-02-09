@@ -178,41 +178,67 @@ plt.show()
 print("✓ Saved: viz_1_predicted_vs_actual_clear_circles.png")
 
 # ============================================================================
-# FIGURE 2: MAE COMPARISON
+# FIGURE 2: NORMALIZED MAE COMPARISON (PERCENT OF MEAN ABSOLUTE VALUE)
 # ============================================================================
-print("\n3. Generating MAE Comparison...")
+print("\n3. Generating Normalized MAE Comparison (Percent of |mean actual|)...")
 
-fig, ax = plt.subplots(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(12, 6)) 
 
 x_pos = np.arange(len(outputs))
-width = 0.35
+width = 0.28 
 
-mae_train = [ann_results_key[out]['mae_train'] for out in outputs]
-mae_test = [ann_results_key[out]['mae_test'] for out in outputs]
+mae_train_abs = np.array([ann_results_key[out]['mae_train'] for out in outputs])
+mae_test_abs  = np.array([ann_results_key[out]['mae_test']  for out in outputs])
 
-bars1 = ax.bar(x_pos - width/2, mae_train, width, label='Training MAE', alpha=0.8, 
-               edgecolor='black', color='#3498db')
-bars2 = ax.bar(x_pos + width/2, mae_test, width, label='Test MAE', alpha=0.8, 
-               edgecolor='black', color='#e74c3c')
+mean_abs_test = np.array([
+    np.mean(np.abs(ann_results_key[out]['y_test'])) for out in outputs
+])
+mean_abs_test = np.where(mean_abs_test == 0, 1e-8, mean_abs_test)
 
-ax.set_xlabel('Output Variable', fontweight='bold', fontsize=13)
-ax.set_ylabel('Mean Absolute Error (MAE)', fontweight='bold', fontsize=13)
-ax.set_title('ANN Model: MAE Comparison (Training vs Test)', fontweight='bold', fontsize=15)
+mae_train_pct = 100.0 * mae_train_abs / mean_abs_test
+mae_test_pct  = 100.0 * mae_test_abs  / mean_abs_test
+
+bars1 = ax.bar(
+    x_pos - width/2, mae_train_pct, width,
+    label='Training MAE (%)', alpha=0.8,
+    edgecolor='black', color='#3498db'
+)
+bars2 = ax.bar(
+    x_pos + width/2, mae_test_pct, width,
+    label='Test MAE (%)', alpha=0.8,
+    edgecolor='black', color='#e74c3c'
+)
+
+ax.set_xlabel('Output Variable', fontweight='bold', fontsize=12)
+ax.set_ylabel('MAE (% of mean |actual|)', fontweight='bold', fontsize=12)
+ax.set_title('ANN Model (Key Inputs): Normalized MAE Comparison (Train vs Test)',
+             fontweight='bold', fontsize=14)
 ax.set_xticks(x_pos)
-ax.set_xticklabels(outputs, fontsize=12)
-ax.legend(fontsize=11, loc='upper left')
+ax.set_xticklabels(outputs, fontsize=11)
+
+# Legend on right
+ax.legend(fontsize=10, loc='center left', bbox_to_anchor=(1.02, 0.5))
 ax.grid(True, alpha=0.3, axis='y')
 
+# Value labels closer to bars, slightly smaller
 for bars in [bars1, bars2]:
     for bar in bars:
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-                f'{height:.4f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+        ax.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            height + 0.3,                 
+            f'{height:.2f}%',
+            ha='center', va='bottom',
+            fontsize=8.5, fontweight='bold'
+        )
 
 plt.tight_layout()
-plt.savefig(os.path.join(save_directory, 'viz_3_mae_comparison.png'), dpi=300, bbox_inches='tight')
+plt.savefig(os.path.join(save_directory,
+                         'viz_3_mae_comparison_normalized.png'),
+            dpi=300, bbox_inches='tight')
 plt.show()
-print("✓ Saved: viz_3_mae_comparison.png")
+print("✓ Saved: viz_3_mae_comparison_normalized.png")
+
 
 # ============================================================================
 # FIGURE 3: R² SCORE COMPARISON
