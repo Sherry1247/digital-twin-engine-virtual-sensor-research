@@ -16,16 +16,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+from utils import get_data_path, get_save_directory
+
 warnings.filterwarnings("ignore")
 
 # --------------------------------------------------
 # 1. Paths and basic configuration
 # --------------------------------------------------
-processed_filepath = (
-    "/Users/daisiqi/Machine-Learning-for-Thermodynamic-Property-dataset-URS-"
-    "/virtual_sensor/df_processed.csv"
-)
-save_directory = os.path.dirname(processed_filepath)
+processed_filepath = get_data_path('df_processed.csv')
+save_directory = get_save_directory()
 os.makedirs(save_directory, exist_ok=True)
 
 key_inputs = ["Torque", "p_0", "T_IM", "P_IM", "EGR_Rate", "ECU_VTG_Pos"]

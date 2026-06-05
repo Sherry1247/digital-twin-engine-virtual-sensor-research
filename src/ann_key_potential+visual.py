@@ -15,6 +15,8 @@ import warnings
 import os
 import pickle
 
+from utils import get_data_path, get_save_directory
+
 warnings.filterwarnings('ignore')
 
 # ============================================================================
@@ -26,7 +28,7 @@ print("ANN MODEL - KEY + POTENTIAL INPUTS (WITH COMPREHENSIVE VISUALIZATIONS)")
 print("="*80)
 
 # --- File Path Configuration (UPDATE THIS PATH AS NEEDED) ---
-processed_filepath = '/Users/daisiqi/Machine-Learning-for-Thermodynamic-Property-dataset-URS-/virtual_sensor/df_processed.csv'  
+processed_filepath = 'get_data_path("df_processed.csv")'  
 save_directory = os.path.dirname(processed_filepath) 
 
 # --- Load data ---

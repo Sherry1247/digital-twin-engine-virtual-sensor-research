@@ -13,10 +13,12 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import warnings
 import os
 
+from utils import get_data_path, get_save_directory
+
 warnings.filterwarnings('ignore')
 
 # --- File Path Configuration ---
-processed_filepath = '/Users/daisiqi/Machine-Learning-for-Thermodynamic-Property-dataset-URS-/virtual_sensor/df_processed.csv'
+processed_filepath = 'get_data_path("df_processed.csv")'
 save_directory = os.path.dirname(processed_filepath)
 
 # --- Load data ---

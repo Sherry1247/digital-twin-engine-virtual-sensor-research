@@ -14,7 +14,7 @@ import os
 warnings.filterwarnings('ignore')
 
 # --- File Path Configuration ---
-processed_filepath = '/Users/daisiqi/Machine-Learning-for-Thermodynamic-Property-dataset-URS-/virtual_sensor/df_processed.csv'
+processed_filepath = 'get_data_path("df_processed.csv")'
 save_directory = os.path.dirname(processed_filepath)
 
 # --- Load data ---
@@ -95,6 +95,8 @@ print("="*80)
 
 # Save results
 import pickle
+
+from utils import get_data_path, get_save_directory
 with open(os.path.join(save_directory, 'lr_baseline_results.pkl'), 'wb') as f:
     pickle.dump(lr_results, f)
 print(f"✓ Results saved to lr_baseline_results.pkl")
