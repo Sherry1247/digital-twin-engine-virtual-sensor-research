@@ -10,12 +10,13 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 import warnings
 import os
+from utils import get_data_path, get_save_directory
 
 warnings.filterwarnings('ignore')
 
 # --- File Path Configuration ---
-processed_filepath = 'get_data_path("df_processed.csv")'
-save_directory = os.path.dirname(processed_filepath)
+processed_filepath = get_data_path('df_processed.csv')
+save_directory = get_save_directory()
 
 # --- Load data ---
 try:
@@ -96,7 +97,6 @@ print("="*80)
 # Save results
 import pickle
 
-from utils import get_data_path, get_save_directory
 with open(os.path.join(save_directory, 'lr_baseline_results.pkl'), 'wb') as f:
     pickle.dump(lr_results, f)
 print(f"✓ Results saved to lr_baseline_results.pkl")

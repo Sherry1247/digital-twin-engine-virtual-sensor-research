@@ -18,8 +18,8 @@ from utils import get_data_path, get_save_directory
 warnings.filterwarnings('ignore')
 
 # --- File Path Configuration ---
-processed_filepath = 'get_data_path("df_processed.csv")'
-save_directory = os.path.dirname(processed_filepath)
+processed_filepath = get_data_path('df_processed.csv')
+save_directory = get_save_directory('visualizations')
 
 # --- Load data ---
 try:

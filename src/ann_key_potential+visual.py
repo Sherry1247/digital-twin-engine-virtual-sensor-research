@@ -28,8 +28,8 @@ print("ANN MODEL - KEY + POTENTIAL INPUTS (WITH COMPREHENSIVE VISUALIZATIONS)")
 print("="*80)
 
 # --- File Path Configuration (UPDATE THIS PATH AS NEEDED) ---
-processed_filepath = 'get_data_path("df_processed.csv")'  
-save_directory = os.path.dirname(processed_filepath) 
+processed_filepath = get_data_path('df_processed.csv')  
+save_directory = get_save_directory('visualizations') 
 
 # --- Load data ---
 try:
@@ -42,7 +42,7 @@ except FileNotFoundError:
         if os.path.exists(alt_path):
             df_processed = pd.read_csv(alt_path)
             processed_filepath = alt_path
-            save_directory = os.path.dirname(processed_filepath) or '/tmp/'
+            save_directory = get_save_directory('visualizations') or '/tmp/'
             print(f"✓ Loaded from: {alt_path}")
             break
     else:
