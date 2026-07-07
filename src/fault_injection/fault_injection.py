@@ -3,7 +3,7 @@ Fault injection module for sensor robustness evaluation.
 
 Provides functions to inject various fault types into sensor data arrays.
 
-Author: TODO (add your name)
+Author: Siqi 
 """
 
 from typing import Any
@@ -32,12 +32,24 @@ def inject_linear_drift(sensor_values: np.ndarray, drift_level: float) -> np.nda
     Returns:
         np.ndarray: Faulty sensor values with linear drift applied.
     """
-    sensor_values = np.asarray(sensor_values)
-    N = sensor_values.shape[0]
+    # Validate and copy input to avoid in-place modification
+    arr = np.asarray(sensor_values, dtype=float)
+    if arr.ndim != 1:
+        raise ValueError("sensor_values must be a 1D array of shape (N,)")
+
+    N = arr.shape[0]
     if N < 2:
         raise ValueError("sensor_values must contain at least 2 samples for drift injection.")
-    drift = drift_level * np.linspace(0, 1, N)
-    return sensor_values * (1 + drift)
+
+    if not (0 <= drift_level):
+        raise ValueError("drift_level must be non-negative")
+
+    # drift(i) = drift_level * (i / (N - 1)) for i in [0..N-1]
+    drift = drift_level * np.linspace(0.0, 1.0, N)
+    factors = 1.0 + drift
+
+    # Return a new array; do not modify the original
+    return arr * factors
 
 
 def inject_exponential_drift(sensor_values: np.ndarray, drift_level: float) -> np.ndarray:
