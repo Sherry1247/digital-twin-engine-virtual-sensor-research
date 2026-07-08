@@ -1,5 +1,5 @@
 # ============================================================================
-# CORRELATION HEATMAP - INPUT-OUTPUT RELATIONSHIPS
+# HEATMAP - INPUT-OUTPUT RELATIONSHIPS
 # ============================================================================
 
 import os
