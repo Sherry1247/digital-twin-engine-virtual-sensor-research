@@ -1,0 +1,2 @@
+representative_id,sensor,sigma,n_samples,healthy_mean,prediction_mean,residual_mean,residual_std,residual_min,residual_max
+MF_IA_High,P_IM,0.05,300,1435.2909999999997,1312.10299670974,-123.1880032902601,18.57384852845483,-197.78470159653466,-77.48068692751986
