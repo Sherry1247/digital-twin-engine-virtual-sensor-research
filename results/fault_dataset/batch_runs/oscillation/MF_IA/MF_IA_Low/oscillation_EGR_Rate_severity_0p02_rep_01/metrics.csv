@@ -1,0 +1,2 @@
+target,representative_id,sensor,fault_type,severity,random_seed,repetition,healthy_noise,n_samples,mae,rmse,r2,residual_mean,residual_standard_deviation,residual_rms,residual_maximum,residual_minimum,residual_skewness,residual_kurtosis
+MF_IA,MF_IA_Low,EGR_Rate,oscillation,0.02,103,1,0.02,300,5.730744589786374,5.742419250990409,-4.082154179415087e+28,-0.036146607343490206,0.6190923885955886,0.6201467268634381,1.5734626455931107,-1.5826956456448897,-0.10234394995644548,2.6476457866751835

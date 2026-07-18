@@ -1,0 +1,2 @@
+target,representative_id,sensor,fault_type,severity,random_seed,repetition,healthy_noise,n_samples,mae,rmse,r2,residual_mean,residual_standard_deviation,residual_rms,residual_maximum,residual_minimum,residual_skewness,residual_kurtosis
+MF_IA,MF_IA_High,P_IM,linear_drift,0.4,61,1,0.02,300,31.20769013939124,37.3406038876989,-2.6970084695666615e+28,56.12557180673461,29.643717863151863,63.4730637308699,116.22379931625028,-6.87601231647659,-0.12022377903015183,1.9612617091909745

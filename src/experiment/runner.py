@@ -11,6 +11,7 @@ from src.fault_injection.bias import inject_bias
 from src.fault_injection.dropout import inject_dropout
 from src.fault_injection.exponential_drift import inject_exponential_drift
 from src.fault_injection.gaussian_noise import inject_relative_gaussian_noise
+from src.fault_injection.lag import inject_lag
 from src.fault_injection.linear_drift import inject_linear_drift
 from src.fault_injection.oscillation import inject_oscillation
 from src.fault_injection.saturation import inject_saturation
@@ -37,6 +38,7 @@ FAULT_REGISTRY = {
     "dropout": inject_dropout,
     "saturation": inject_saturation,
     "oscillation": inject_oscillation,
+    "lag": inject_lag,
 }
 
 

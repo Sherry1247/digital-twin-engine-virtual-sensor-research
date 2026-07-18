@@ -18,7 +18,6 @@ REPRESENTATIVE_IDS = ("MF_IA_High", "MF_IA_Low")
 
 DEFAULT_N_SAMPLES = 300
 DEFAULT_HEALTHY_NOISE = 0.02
-DEFAULT_REPETITIONS = 2
 FAULT_TYPES = (
     "gaussian",
     "bias",
@@ -28,8 +27,39 @@ FAULT_TYPES = (
     "dropout",
     "saturation",
     "oscillation",
+    "lag",
 )
-BATCH_SEVERITIES = tuple(round(level / 100.0, 2) for level in range(1, 21))
+# Ordered fault magnitudes. Repeated group boundaries are intentional labels
+# for distinct classifier cases and must remain separate experiments.
+BATCH_SEVERITIES = [
+    #low severity faults
+    0.0125,
+    0.0200,
+    0.0275,
+    0.0350,
+    0.0425,
+
+    #medium severity faults
+    0.0500,
+    0.0625,
+    0.0750,
+    0.0875,
+    0.1000,
+
+    #high severity faults
+    0.1250,
+    0.1500,
+    0.1750,
+    0.2000,
+    0.2250,
+
+    #failure severity faults
+    0.2500,
+    0.2750,
+    0.3000,
+    0.3500,
+    0.4000,
+]
 
 
 @dataclass(frozen=True)
@@ -56,10 +86,10 @@ def fault_dataset_matrix(
     random_seed: int | None = 42,
     n_samples: int = DEFAULT_N_SAMPLES,
     healthy_noise: float = DEFAULT_HEALTHY_NOISE,
-    repetitions: int = DEFAULT_REPETITIONS,
+    repetitions: int = 1,
     results_dir: Path = DEFAULT_RESULTS_DIR,
 ) -> list[ExperimentConfig]:
-    """Build the 1,280-case batch matrix for the eight supported failures."""
+    """Build the 560-case batch matrix for the seven supported failures."""
     if repetitions <= 0:
         raise ValueError("repetitions must be positive")
     unsupported = sorted(set(fault_types) - set(FAULT_TYPES))
@@ -85,6 +115,7 @@ def fault_dataset_matrix(
                                 repetition=repetition,
                                 n_samples=n_samples,
                                 healthy_noise=healthy_noise,
+                                generate_figures=False,
                                 results_dir=results_dir,
                             )
                         )
