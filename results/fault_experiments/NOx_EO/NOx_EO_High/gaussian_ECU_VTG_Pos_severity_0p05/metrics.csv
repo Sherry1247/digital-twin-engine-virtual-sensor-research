@@ -1,2 +1,0 @@
-target,representative_id,sensor,fault_type,severity,random_seed,n_samples,mae,rmse,r2,residual_mean,residual_std,residual_min,residual_max
-NOx_EO,NOx_EO_High,ECU_VTG_Pos,gaussian,0.05,42,300,11.492570200665865,11.686709476032803,,-11.492570200665865,2.1213223611610372,-19.503268132853464,-8.261590405630841

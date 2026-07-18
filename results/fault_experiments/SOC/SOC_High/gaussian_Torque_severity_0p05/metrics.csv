@@ -1,2 +1,0 @@
-target,representative_id,sensor,fault_type,severity,random_seed,n_samples,mae,rmse,r2,residual_mean,residual_std,residual_min,residual_max
-SOC,SOC_High,Torque,gaussian,0.05,42,300,0.09121940235071165,0.0923841700125844,-1.0819188544427779e+28,-0.09121940235071165,0.01462379922226377,-0.13836624125060748,-0.05227089577736521

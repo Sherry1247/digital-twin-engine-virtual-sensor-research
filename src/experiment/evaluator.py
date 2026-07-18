@@ -57,10 +57,27 @@ def regression_metrics(y_true: Sequence[float], y_pred: Sequence[float]) -> dict
         "mae": float(np.mean(np.abs(error))),
         "rmse": float(np.sqrt(np.mean(error**2))),
         "r2": r2,
-        "residual_mean": float(np.mean(error)),
-        "residual_std": float(np.std(error, ddof=0)),
-        "residual_min": float(np.min(error)),
-        "residual_max": float(np.max(error)),
+        **residual_statistics(error),
+    }
+
+
+def residual_statistics(residual: Sequence[float]) -> dict[str, float]:
+    """Calculate case-level residual statistics for classifier training."""
+    values = np.asarray(residual, dtype=float)
+    if values.size == 0:
+        raise ValueError("residual must contain at least one value")
+
+    mean = float(np.mean(values))
+    std = float(np.std(values, ddof=0))
+    centered = values - mean
+    return {
+        "residual_mean": mean,
+        "residual_standard_deviation": std,
+        "residual_rms": float(np.sqrt(np.mean(values**2))),
+        "residual_maximum": float(np.max(values)),
+        "residual_minimum": float(np.min(values)),
+        "residual_skewness": _skewness(centered, std),
+        "residual_kurtosis": _kurtosis(centered, std),
     }
 
 

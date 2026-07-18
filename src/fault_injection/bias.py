@@ -1,12 +1,17 @@
-"""Bias fault injection placeholder."""
+"""Persistent relative bias fault injection."""
 
 from __future__ import annotations
 
-from typing import Any, Sequence
+from typing import Sequence
 
 import numpy as np
 
 
-def inject_bias(sensor_values: Sequence[float], *args: Any, **kwargs: Any) -> np.ndarray:
-    """Reserve the bias fault interface for future experiments."""
-    raise NotImplementedError("inject_bias is not implemented yet.")
+def inject_bias(
+    sensor_values: Sequence[float], severity: float, random_state: int | None = None
+) -> np.ndarray:
+    """Apply the constant additive bias ``severity * y`` to clean signal ``y``."""
+    if severity < 0:
+        raise ValueError("severity must be non-negative")
+    values = np.asarray(sensor_values, dtype=float)
+    return values + severity * values

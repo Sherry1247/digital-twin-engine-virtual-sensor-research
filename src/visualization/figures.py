@@ -60,7 +60,7 @@ def save_figure_a(
 ) -> Path:
     """Figure A: healthy sensor versus faulty sensor."""
     _apply_style()
-    fig, axis = plt.subplots(figsize=(14, 6))
+    fig, axis = plt.subplots(figsize=(16, 5.5))
     sample_index = time_series["sample_index"].to_numpy()
     healthy_sensor = time_series["healthy_sensor"].to_numpy()
     faulty_sensor = time_series["faulty_sensor"].to_numpy()
@@ -117,7 +117,7 @@ def save_figure_b(
     y_min = plot_min - 0.08 * value_range
     y_max = plot_max + 0.20 * value_range
 
-    fig, axis = plt.subplots(figsize=(14, 6.5))
+    fig, axis = plt.subplots(figsize=(16, 5.5))
     axis.set_ylim(y_min, y_max)
     _add_sigma_bands(axis, y_min, y_max, lower_1, upper_1, lower_2, upper_2)
     axis.plot(sample_index, residual, label="Residual", linewidth=2.0, color="#2ca02c", zorder=4)
@@ -179,7 +179,7 @@ def save_figure_c(
 ) -> Path:
     """Figure C: healthy prediction, faulty prediction, and healthy ground truth."""
     _apply_style()
-    fig, axis = plt.subplots(figsize=(14, 6))
+    fig, axis = plt.subplots(figsize=(16, 5.5))
     sample_index = time_series["sample_index"].to_numpy()
     healthy_ground_truth = time_series["healthy_ground_truth"].to_numpy()
     healthy_prediction = time_series["healthy_prediction"].to_numpy()

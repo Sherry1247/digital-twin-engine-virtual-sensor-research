@@ -1,2 +1,0 @@
-target,representative_id,sensor,fault_type,severity,random_seed,n_samples,mae,rmse,r2,residual_mean,residual_std,residual_min,residual_max
-SOC,SOC_High,ECU_VTG_Pos,gaussian,0.05,42,300,0.12408310345035017,0.15279183631248236,-2.9593740910762766e+28,-0.10999083779984863,0.10605357534674537,-0.4592640829876622,0.0915832999299866

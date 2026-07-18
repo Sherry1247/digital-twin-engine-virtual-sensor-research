@@ -1,2 +1,0 @@
-target,representative_id,sensor,fault_type,severity,random_seed,n_samples,mae,rmse,r2,residual_mean,residual_std,residual_min,residual_max
-NOx_EO,NOx_EO_High,EGR_Rate,gaussian,0.05,42,300,17.020455330699345,21.585366652672885,,-10.141208184503864,19.054761874368168,-70.82735133007509,41.452740242660184

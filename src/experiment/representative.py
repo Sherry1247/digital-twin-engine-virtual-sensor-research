@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .config import INPUT_COLUMNS, TARGETS
+from .config import INPUT_COLUMNS
 
 
 def load_representative_point(csv_path: Path, representative_id: str, target: str) -> pd.Series:
@@ -22,7 +22,7 @@ def load_representative_point(csv_path: Path, representative_id: str, target: st
     if pd.notna(expected_output) and str(expected_output) != target:
         raise ValueError(f"Representative '{representative_id}' is for '{expected_output}', not '{target}'")
 
-    missing = [column for column in [*INPUT_COLUMNS, *TARGETS] if column not in representative.index]
+    missing = [column for column in [*INPUT_COLUMNS, target] if column not in representative.index]
     if missing:
         raise ValueError(f"Representative CSV is missing required columns: {missing}")
 
